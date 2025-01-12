@@ -19,6 +19,27 @@
 
 # print(open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1", "r").read())
 
-knapsackProblem = open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1", "r").read()
+import numpy as np
+
+# File 1
+# from binary file to a np array where each line has become a list
+knapsackProblem = open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1", "r").readlines()
+new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
+
+# get first element cause it contains the total items and the knapsack's capacity
+knapsackTotalItems, knapsackCapacity = new_knapsackProblem[:1][0] 
+# print(knapsackTotalItems, knapsackCapacity)
+
+# get the rest cause it is the list of items for the 0/1 knapsack problem
+np_knapsackProblem = new_knapsackProblem[1:]
+# print(np_knapsackProblem)
+
+# File 2
+# Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
 optimalSolution = open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1a", "r").read()
-optimalKnapsackValue = open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1o", "r").read()
+np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
+# print(len(np_booleanArray))
+
+# File 3
+optimalKnapsackValue: int = int(open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1o", "r").read())
+# print(optimalKnapsackValue)
