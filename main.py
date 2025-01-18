@@ -43,3 +43,27 @@ np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
 # File 3
 optimalKnapsackValue: int = int(open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1o", "r").read())
 # print(optimalKnapsackValue)
+
+# Combining File 1 && 3
+value, weight = np_knapsackProblem.T
+# value, weight = np.hsplit(np_knapsackProblem, 2)
+# value = value.flatten()
+# weight = weight.flatten()
+combination = np.stack((value, weight, np_booleanArray), axis=1)
+
+# Correct
+print(len(np_booleanArray))
+print(len(weight))
+print(len(value))
+
+# print(np_booleanArray[6])
+# print(np_knapsackProblem[6])
+# print(combination[6])
+
+# print(np_booleanArray[10])
+# print(np_knapsackProblem[10])
+# print(combination[10])
+
+print(np_booleanArray[37])
+print(np_knapsackProblem[37])
+print(combination[37])
