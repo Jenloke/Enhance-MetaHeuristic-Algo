@@ -8,17 +8,18 @@ A collection of application of a set of metaheuristic algorithms for the 0/1 Kna
 - Convergence Speed
 - Space Complexity
 
-#### Running the REPO
-
-1. Clone the repository
-2. XXX
-
 ### Technologies Used
 
 - Python
 - Jupyter Notebook
 - Matplotlib
 - XXX
+
+#### Running the REPO
+
+1. Clone the repository
+2. Install technologies used using pip
+3. XXX
 
 ---
 
