@@ -8,6 +8,7 @@
 #     print(file1.read)
 # print(log)
 
+
 # with open(f"./Dataset/{1}/{100}/knapPI_{1}_{100}_1000_1", "r") as file:
 #   content = file.read()
 #   print(content)
@@ -55,13 +56,14 @@ print(len(np_booleanArray))
 print(len(weight))
 print(len(value))
 
-# Sample Values
 # print(np_booleanArray[6])
 # print(np_knapsackProblem[6])
 # print(combination[6])
+
 # print(np_booleanArray[10])
 # print(np_knapsackProblem[10])
 # print(combination[10])
-# print(np_booleanArray[37]) 
-# print(np_knapsackProblem[37])
-# print(combination[37])
+
+print(np_booleanArray[37])
+print(np_knapsackProblem[37])
+print(combination[37])
