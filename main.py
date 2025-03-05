@@ -28,7 +28,7 @@ new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).
 
 # get first element cause it contains the total items and the knapsack's capacity
 knapsackTotalItems, knapsackCapacity = new_knapsackProblem[:1][0] 
-# print(knapsackTotalItems, knapsackCapacity)
+print(knapsackTotalItems, knapsackCapacity)
 
 # get the rest cause it is the list of items for the 0/1 knapsack problem
 np_knapsackProblem = new_knapsackProblem[1:]
@@ -52,9 +52,12 @@ value, weight = np_knapsackProblem.T
 combination = np.stack((value, weight, np_booleanArray), axis=1)
 
 # Correct
-print(len(np_booleanArray))
-print(len(weight))
-print(len(value))
+# print(len(np_booleanArray))
+# print(len(weight))
+# print(len(value))
+# print(np_booleanArray)
+# print(weight)
+# print(value)
 
 # print(np_booleanArray[6])
 # print(np_knapsackProblem[6])
@@ -64,6 +67,6 @@ print(len(value))
 # print(np_knapsackProblem[10])
 # print(combination[10])
 
-print(np_booleanArray[37])
-print(np_knapsackProblem[37])
-print(combination[37])
+# print(np_booleanArray[37])
+# print(np_knapsackProblem[37])
+# print(combination[37])
