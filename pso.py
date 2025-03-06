@@ -1,6 +1,9 @@
 import numpy as np
 
-knapsackProblem = open(f"./Dataset/{1}/{10000}/knapPI_{1}_{10000}_1000_1", "r").readlines()
+file = 2
+size = 100
+
+knapsackProblem = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1", "r").readlines()
 new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
 
 # get first element cause it contains the total items and the knapsack's capacity
@@ -9,25 +12,17 @@ print(knapsackTotalItems, knapsackCapacity)
 
 # get the rest cause it is the list of items for the 0/1 knapsack problem
 np_knapsackProblem = new_knapsackProblem[1:]
-# print(np_knapsackProblem)
-
-# File 2
-# Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
-optimalSolution = open(f"./Dataset/{1}/{10000}/knapPI_{1}_{10000}_1000_1a", "r").read()
-np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
-# print(len(np_booleanArray))
 
 # File 3
-optimalKnapsackValue: int = int(open(f"./Dataset/{1}/{10000}/knapPI_{1}_{10000}_1000_1o", "r").read())
-# print(optimalKnapsackValue)
+optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
+print(optimalKnapsackValue)
 
 # Combining File 1 && 3
 value, weight = np_knapsackProblem.T
 
-
 # Problem Parameters
 n_items = len(np_knapsackProblem)  # Number of items
-max_weight = 49877  # Knapsack capacity
+max_weight = knapsackCapacity  # Knapsack capacity
 
 # Randomly generate item values and weights
 np.random.seed(42)
@@ -39,7 +34,7 @@ weights = weight
 
 # PSO Parameters
 n_particles = 30
-max_iterations = 100
+max_iterations = 1000
 w = 0.7  # Inertia weight
 c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
