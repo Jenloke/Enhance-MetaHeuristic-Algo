@@ -1,17 +1,22 @@
 import numpy as np
+import json
 
-file = 2
-size = 100
+file = 1
+size = 500
 
 knapsackProblem = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1", "r").readlines()
 new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
-
 # get first element cause it contains the total items and the knapsack's capacity
 knapsackTotalItems, knapsackCapacity = new_knapsackProblem[:1][0] 
 print(knapsackTotalItems, knapsackCapacity)
-
 # get the rest cause it is the list of items for the 0/1 knapsack problem
 np_knapsackProblem = new_knapsackProblem[1:]
+
+# File 2
+# Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
+optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
+np_booleanArray = np.array(optimalSolution.split(), dtype=int)
+# print(np_booleanArray)
 
 # File 3
 optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
@@ -26,15 +31,13 @@ max_weight = knapsackCapacity  # Knapsack capacity
 
 # Randomly generate item values and weights
 np.random.seed(42)
-# values = np.random.randint(10, 100, size=n_items)
-# weights = np.random.randint(5, 20, size=n_items)
 
 values = value
 weights = weight
 
 # PSO Parameters
-n_particles = 30
-max_iterations = 1000
+n_particles = 20
+max_iterations = 100
 w = 0.7  # Inertia weight
 c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
@@ -85,4 +88,26 @@ for _ in range(max_iterations):
 
 # Output best solution
 print("Best value obtained:", gBest_score)
-print("Best selection of items:", gBest)
+# print("Best selection of items:", gBest)
+
+decrepancy = np.array([])
+for i in range(len(gBest)):
+  if gBest[i] != np_booleanArray[i]:
+    description = 'object not counted' if np_booleanArray[i] == 1 else 'should not be included'
+    decrepancy = np.append(decrepancy, {
+      'index': i,
+      'weight': weight[i].item(),
+      'value': value[i].item(),
+      'pso_value': gBest[i].item(),
+      'optimal_value': np_booleanArray[i].item(),
+      'description': description,
+    })
+
+sol_weight = np.dot(gBest, weight)
+opti_weight = np.dot(np_booleanArray, weight)
+
+print('sol_weight', sol_weight)
+print('opti_weight', opti_weight)
+
+with open('out.json', 'w') as outfile:
+  json.dump(decrepancy.tolist(), outfile)
