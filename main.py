@@ -13,20 +13,13 @@ def problem(file, size):
   new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
 
   # get first element cause it contains the total items and the knapsack's capacity
-  knapsackTotalItems, knapsackCapacity = new_knapsackProblem[:1][0] 
-  print('knapsackTotalItems:', knapsackTotalItems)
+  problemLength, knapsackCapacity = new_knapsackProblem[:1][0] 
+  print('problemLength:', problemLength)
   print('knapsackCapacity:',  knapsackCapacity)
 
   # get the rest cause it is the list of items for the 0/1 knapsack problem
   np_knapsackProblem = new_knapsackProblem[1:]
   # print(np_knapsackProblem)
-
-  # File 2
-  # Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
-  # optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
-  # np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
-  # np_booleanArray = np.array(optimalSolution.split(), dtype=int)
-  # print(len(np_booleanArray))
 
   # File 3
   optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
@@ -40,6 +33,7 @@ def problem(file, size):
   # print(np.dot(np_booleanArray, value))
 
   return {
+    'problemLength': problemLength,
     'value': value, 
     'weight': weight, 
     'knapsackCapacity': knapsackCapacity
@@ -57,3 +51,10 @@ def problem(file, size):
   # print(np_booleanArray[37])
   # print(np_knapsackProblem[37])
   # print(combination[37])
+  
+  # File 2
+  # Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
+  # optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
+  # np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
+  # np_booleanArray = np.array(optimalSolution.split(), dtype=int)
+  # print(len(np_booleanArray))
