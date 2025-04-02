@@ -80,21 +80,25 @@ class WOA_Knapsack:
     return solution
 
 
-knapsackProblem = open(f"./Dataset/{1}/{500}/knapPI_{1}_{500}_1000_1", "r").readlines()
-new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
+file = 1
+size = 10000
 
+knapsackProblem = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1", "r").readlines()
+new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
 # get first element cause it contains the total items and the knapsack's capacity
 knapsackTotalItems, knapsackCapacity = new_knapsackProblem[:1][0] 
 print(knapsackTotalItems, knapsackCapacity)
-
 # get the rest cause it is the list of items for the 0/1 knapsack problem
 np_knapsackProblem = new_knapsackProblem[1:]
 
-optimalSolution = open(f"./Dataset/{1}/{500}/knapPI_{1}_{500}_1000_1a", "r").read()
-np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
+# File 2
+# Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
+optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
+np_booleanArray = np.array(optimalSolution.split(), dtype=int)
+print(np_booleanArray)
 
 # File 3
-optimalKnapsackValue: int = int(open(f"./Dataset/{1}/{500}/knapPI_{1}_{500}_1000_1o", "r").read())
+optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
 print(optimalKnapsackValue)
 
 # Combining File 1 && 3
@@ -104,7 +108,9 @@ value, weight = np_knapsackProblem.T
 values = value
 weights = weight
 capacity = knapsackCapacity
+
 woa = WOA_Knapsack(values, weights, capacity, num_whales=20, max_iter=100)
+
 best_solution, best_value = woa.optimize()
 print("Best Solution:", best_solution)
 print("Best Value:", best_value)

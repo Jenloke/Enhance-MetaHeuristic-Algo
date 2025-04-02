@@ -34,13 +34,13 @@ values = value
 capacity = knapsackCapacity  # Knapsack capacity
 num_items = len(weights)
 
-print(num_items)
+# print(num_items)
 
 # Harmony Search Parameters
 HMS = 1000  # Harmony Memory Size
-HMCR = 0.75  # Harmony Memory Consideration Rate
+HMCR = 0.7  # Harmony Memory Consideration Rate
 PAR = 0.3  # Pitch Adjustment Rate
-iterations = 20
+iterations = 3000
 
 # Generate Initial Harmony Memory (Random\ Feasible Solutions)
 def generate_solution():
@@ -58,7 +58,7 @@ def generate_solution():
 	N = int(num_items * 0.5)
 	while True:
 		if np.dot(solution, weights) <= capacity:
-			print(np.dot(solution, values))
+			# print(np.dot(solution, values))
 			return solution
 		else:
 			indices = np.random.choice(len(solution), N, replace=False)
@@ -79,6 +79,7 @@ def generate_solution():
 harmony_memory = [generate_solution() for _ in range(HMS)]
 harmony_values = [np.dot(sol, values) for sol in harmony_memory]
 
+# old_argmax = 0
 # Harmony Search Optimization Loop
 for _ in range(iterations):
 	# Step 1: Improvise New Harmony
@@ -104,6 +105,10 @@ for _ in range(iterations):
 	if new_value > harmony_values[min_idx]:  # Replace the worst solution
 		harmony_memory[min_idx] = new_harmony
 		harmony_values[min_idx] = new_value
+
+	# if np.argmax(harmony_values) != old_argmax:
+	# 	print(_, np.argmax(harmony_values))
+	# old_argmax = np.argmax(harmony_values)
 
 # Best Solution Found
 best_index = np.argmax(harmony_values)

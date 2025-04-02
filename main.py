@@ -52,9 +52,11 @@ def problem(file, size):
   # print(np_knapsackProblem[37])
   # print(combination[37])
   
+def optimalSolution(file, size):
   # File 2
   # Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
-  # optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
+  optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
   # np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
-  # np_booleanArray = np.array(optimalSolution.split(), dtype=int)
+  np_booleanArray = np.array(optimalSolution.split(), dtype=int)
   # print(len(np_booleanArray))
+  return np_booleanArray.tolist()
