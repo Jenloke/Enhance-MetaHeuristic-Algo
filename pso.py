@@ -1,12 +1,12 @@
 import numpy as np
-# from datetime import datetime
+from datetime import datetime
 
 # Randomly generate item values and weights
 # np.random.seed(42)
 
-# start_time = datetime.now()
+def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, iterations):
+  start_time = datetime.now()
 
-def pso(problemLength, value, weight, knapsackCapacity):
   np.random.seed(12)
   # Problem Parameters
   n_items = problemLength  # Number of items
@@ -15,18 +15,23 @@ def pso(problemLength, value, weight, knapsackCapacity):
   weights = weight
 
   # PSO Parameters
-  n_particles = 2
-  max_iterations = 43
+  # p = 20 i = 100
+  n_particles = particles
+  max_iterations = iterations
+
+  print('particles:', n_particles)
+  print('iterations:', max_iterations)
+
   w = 0.7  # Inertia weight
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
   # Initialize particles
   X = np.random.randint(0, 2, (n_particles, n_items))  # Position matrix
   V = np.random.uniform(-1, 1, (n_particles, n_items))  # Velocity matrix
-  for i in range(len(X)):
-    print(i , np.dot(X[i], values))
-    print(i, np.dot(V[i], values))
-    # print(i , V[i])
+  # for i in range(len(X)):
+  #   print(i , np.dot(X[i], values))
+  #   print(i, np.dot(V[i], values))
+  #   # print(i , V[i])
   
   pBest = X.copy()
   pBest_scores = np.array([0 if np.sum(weights * x) > max_weight else np.sum(values * x) for x in X])
@@ -73,6 +78,14 @@ def pso(problemLength, value, weight, knapsackCapacity):
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
 
+    if gBest_score == optimalKnapsackValue:
+      print('solved at iteration:', _+1)
+      return {
+        'solValue': gBest_score,
+        'solArray': gBest,
+      }
+
+
   # Output best solution
   # print("Best value obtained:", gBest_score)
   # print("Best selection of items:", gBest)  
@@ -82,15 +95,14 @@ def pso(problemLength, value, weight, knapsackCapacity):
   #   print(i , np.dot(X[i], values))
   #   print(i, np.dot(V[i], values))
   
-  for i in pBest:
-    print(i)
-  print(gBest_score)
+  # for i in pBest:
+  #   print(i)
+  # print(gBest_score)
+
+  end_time = datetime.now()
+  print(end_time - start_time)
   
   return {
     'solValue': gBest_score,
     'solArray': gBest,
   }
-
-
-# end_time = datetime.now()
-# print(end_time - start_time)

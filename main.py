@@ -36,7 +36,8 @@ def problem(file, size):
     'problemLength': problemLength,
     'value': value, 
     'weight': weight, 
-    'knapsackCapacity': knapsackCapacity
+    'knapsackCapacity': knapsackCapacity,
+    'optimalKnapsackValue': optimalKnapsackValue
   }
   
 
@@ -59,4 +60,8 @@ def optimalSolution(file, size):
   # np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
   np_booleanArray = np.array(optimalSolution.split(), dtype=int)
   # print(len(np_booleanArray))
+
+  optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
+  print('optimalKnapsackValue:', optimalKnapsackValue)
+  
   return np_booleanArray.tolist()
