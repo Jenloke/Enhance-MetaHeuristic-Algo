@@ -1,12 +1,6 @@
 import numpy as np
-from datetime import datetime
-
-# Randomly generate item values and weights
-# np.random.seed(42)
 
 def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, iterations):
-  start_time = datetime.now()
-
   np.random.seed(12)
   # Problem Parameters
   n_items = problemLength  # Number of items
@@ -15,23 +9,14 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   weights = weight
 
   # PSO Parameters
-  # p = 20 i = 100
   n_particles = particles
   max_iterations = iterations
-
-  print('particles:', n_particles)
-  print('iterations:', max_iterations)
-
   w = 0.7  # Inertia weight
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
   # Initialize particles
   X = np.random.randint(0, 2, (n_particles, n_items))  # Position matrix
   V = np.random.uniform(-1, 1, (n_particles, n_items))  # Velocity matrix
-  # for i in range(len(X)):
-  #   print(i , np.dot(X[i], values))
-  #   print(i, np.dot(V[i], values))
-  #   # print(i , V[i])
   
   pBest = X.copy()
   pBest_scores = np.array([0 if np.sum(weights * x) > max_weight else np.sum(values * x) for x in X])
@@ -39,13 +24,13 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   gBest = pBest[np.argmax(pBest_scores)].copy()
   gBest_score = np.max(pBest_scores)
 
-  def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
   # Velocity to Probability Mapping:
   # In continuous PSO, particle velocities represent the step size and direction of movement. In BPSO, however, these velocities need to be converted to probabilities for binary decisions. This is achieved using the sigmoid function:
-
+  def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+  
   def repair_solution(solution):
-    # """Ensures solution is within the weight constraint."""
+    # Ensures solution is within the weight constraint.
     while np.sum(weights * solution) > max_weight:
       idx = np.where(solution == 1)[0]
       if len(idx) == 0:
@@ -78,31 +63,40 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
 
-    if gBest_score == optimalKnapsackValue:
-      print('solved at iteration:', _+1)
-      return {
-        'solValue': gBest_score,
-        'solArray': gBest,
-      }
-
-
   # Output best solution
   # print("Best value obtained:", gBest_score)
   # print("Best selection of items:", gBest)  
-  
-  # print('final solution')
-  # for i in range(len(X)):
-  #   print(i , np.dot(X[i], values))
-  #   print(i, np.dot(V[i], values))
-  
-  # for i in pBest:
-  #   print(i)
-  # print(gBest_score)
-
-  end_time = datetime.now()
-  print(end_time - start_time)
   
   return {
     'solValue': gBest_score,
     'solArray': gBest,
   }
+
+
+# FOR REFERENCE
+  # for i in range(len(X)):
+  #   print(i , np.dot(X[i], values))
+  #   print(i, np.dot(V[i], values))
+  #   # print(i , V[i])
+
+  # iteration = 0
+  # while(True):
+  # iteration += 1
+
+  # if gBest_score == optimalKnapsackValue:
+  #   print('solved at iteration:', iteration)
+  #   end_time = datetime.now()
+  #   print(end_time - start_time)
+  #   return {
+  #     'solValue': gBest_score,
+  #     'solArray': gBest,
+  #   }
+
+  # if iteration == 1000:
+  #   print('now at iteration:', iteration)
+  #   end_time = datetime.now()
+  #   print(end_time - start_time)
+  #   return {
+  #     'solValue': gBest_score,
+  #     'solArray': gBest,
+  #   }
