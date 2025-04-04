@@ -15,8 +15,8 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
   # Initialize particles
-  X = np.random.randint(0, 2, (n_particles, n_items))  # Position matrix
-  V = np.random.uniform(-1, 1, (n_particles, n_items))  # Velocity matrix
+  X = np.random.randint(0, 2, (n_particles, n_items)) # Position matrix
+  V = np.random.uniform(-1, 1, (n_particles, n_items)) # Velocity matrix
   
   pBest = X.copy()
   pBest_scores = np.array([0 if np.sum(weights * x) > max_weight else np.sum(values * x) for x in X])
@@ -40,7 +40,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
     return solution
 
   # PSO Loop
-  for _ in range(max_iterations):
+  for itr in range(max_iterations):
     for i in range(n_particles):
       # Update velocity
       r1, r2 = np.random.rand(n_items), np.random.rand(n_items)
@@ -63,6 +63,13 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
 
+    if gBest_score == optimalKnapsackValue:
+      return {
+        'solValue': gBest_score,
+        'solArray': gBest,
+        'numberIterations': itr+1,
+    }
+
   # Output best solution
   # print("Best value obtained:", gBest_score)
   # print("Best selection of items:", gBest)  
@@ -70,6 +77,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   return {
     'solValue': gBest_score,
     'solArray': gBest,
+    'numberIterations': iterations,
   }
 
 
@@ -83,14 +91,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   # while(True):
   # iteration += 1
 
-  # if gBest_score == optimalKnapsackValue:
-  #   print('solved at iteration:', iteration)
-  #   end_time = datetime.now()
-  #   print(end_time - start_time)
-  #   return {
-  #     'solValue': gBest_score,
-  #     'solArray': gBest,
-  #   }
+
 
   # if iteration == 1000:
   #   print('now at iteration:', iteration)
