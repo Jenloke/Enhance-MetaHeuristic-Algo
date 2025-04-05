@@ -85,6 +85,8 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
   def sigmoid(x):
     return 1 / (1 + np.exp(-x))
   
+  best_SolutionPerIteration = np.array([], dtype=int)
+  
   # PSO Loop
   for itr in range(max_iterations):
     for i in range(n_particles):
@@ -104,10 +106,15 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
         pBest[i] = X[i].copy()
         pBest_scores[i] = fitness
 
+    best_value = np.max(pBest_scores)
+    best_SolutionPerIteration = np.append(best_SolutionPerIteration, gBest_score)
+    
     # Update global best
-    if np.max(pBest_scores) > gBest_score:
+    if best_value > gBest_score:
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
+
+  print(best_SolutionPerIteration)
 
   # Output best solution
   # print("Best value obtained:", gBest_score)

@@ -1,6 +1,6 @@
 import numpy as np
 
-def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, harmonyMemorySize, n_iterations):
+def test_hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, harmonyMemorySize, n_iterations):
 	# Problem Parameters
 	num_items = problemLength
 	max_weight = knapsackCapacity
@@ -31,8 +31,10 @@ def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, ha
 		repair_solution(solution)
 		return solution
 
-	harmony_memory = [generate_solution() for _ in range(HMS)]
-	harmony_values = [np.dot(solution, values) for solution in harmony_memory]
+	harmony_memory = np.array([generate_solution() for _ in range(HMS)])
+	harmony_values = np.array([np.dot(solution, values) for solution in harmony_memory])
+
+	best_SolutionPerIteration = np.array([], dtype=int)
 
 	# Harmony Search Optimization Loop
 	for itr in range(max_iterations):
@@ -59,12 +61,14 @@ def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, ha
 			harmony_memory[min_idx] = new_harmony
 			harmony_values[min_idx] = new_value
 
+		best_SolutionPerIteration = np.append(best_SolutionPerIteration, harmony_values[np.argmax(harmony_values)])
+
+	print(best_SolutionPerIteration)
+
 	# Best Solution Found
 	best_index = np.argmax(harmony_values)
 	best_solution = harmony_memory[best_index]
 	best_value = harmony_values[best_index]
-
-
 
 	# print("Best Solution:", best_solution)
 	# print("Total Value:", best_value)
