@@ -1,6 +1,6 @@
 import numpy as np
 
-def test_hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, harmonyMemorySize, n_iterations):
+def test_hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, population, n_iterations):
 	# Problem Parameters
 	num_items = problemLength
 	max_weight = knapsackCapacity
@@ -8,7 +8,7 @@ def test_hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValu
 	weights = weight # Weights of items
 
 	# HSA Parameters
-	HMS = harmonyMemorySize  # Harmony Memory Size
+	HMS = population  # Harmony Memory Size
 	max_iterations = n_iterations
 	HMCR = 0.8 # Harmony Memory Consideration Rate
 	PAR = 0.2 # Pitch Adjustment Rate
@@ -63,7 +63,15 @@ def test_hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValu
 
 		best_SolutionPerIteration = np.append(best_SolutionPerIteration, harmony_values[np.argmax(harmony_values)])
 
-	print(best_SolutionPerIteration)
+		if harmony_values[np.argmax(harmony_values)] == optimalKnapsackValue:
+			best_index = np.argmax(harmony_values)
+			return {
+				'solValue': harmony_values[best_index].item(),
+				'solWeight': np.dot(harmony_memory[best_index], weights).item(),		
+				'solArray': harmony_memory[best_index].tolist(),
+				'numberIterations': itr+1,
+				'best_SolutionPerIteration': best_SolutionPerIteration.tolist(),
+			}  
 
 	# Best Solution Found
 	best_index = np.argmax(harmony_values)
@@ -74,15 +82,9 @@ def test_hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValu
 	# print("Total Value:", best_value)
 
 	return {
-		'solValue': best_value,
-		'solArray': best_solution,
+		'solValue': best_value.item(),
+		'solWeight': np.dot(best_solution, weights).item(),
+		'solArray': best_solution.tolist(),
 		'numberIterations': max_iterations,
+		'best_SolutionPerIteration': best_SolutionPerIteration.tolist(),
 	}
-
-		# if harmony_values[np.argmax(harmony_values)] == optimalKnapsackValue:
-		# 	best_index = np.argmax(harmony_values)
-		# 	return {
-		# 		'solValue': harmony_values[best_index],
-		# 		'solArray': harmony_memory[best_index],
-		# 		'numberIterations': itr+1,
-		# 	}

@@ -1,6 +1,6 @@
 import numpy as np
 
-def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, n_iterations):
+def test_pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, population, n_iterations):
   # Problem Parameters
   n_items = problemLength  # Number of items
   max_weight = knapsackCapacity
@@ -8,7 +8,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   weights = weight
 
   # PSO Parameters
-  n_particles = particles
+  n_particles = population
   max_iterations = n_iterations
   w = 0.7  # Inertia weight
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
@@ -60,21 +60,30 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
         pBest_scores[i] = fitness
 
     best_value = np.max(pBest_scores)
-    best_SolutionPerIteration = np.append(best_SolutionPerIteration, gBest_score)
+    best_SolutionPerIteration = np.append(best_SolutionPerIteration, best_value)
     
     # Update global best
     if best_value > gBest_score:
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
-    
-  print(best_SolutionPerIteration)
+      
+    if best_value == optimalKnapsackValue:
+      return {
+        'solValue': gBest_score.item(),
+        'solWeight': np.dot(gBest, weights).item(),
+        'solArray': gBest.tolist(),
+        'numberIterations': itr+1,
+        'best_SolutionPerIteration': best_SolutionPerIteration.tolist(),
+      }
 
   # Output best solution
   # print("Best value obtained:", gBest_score)
   # print("Best selection of items:", gBest)  
-  
+
   return {
-    'solValue': gBest_score,
-    'solArray': gBest,
+    'solValue': gBest_score.item(),
+    'solWeight': np.dot(gBest, weights).item(),
+    'solArray': gBest.tolist(),
     'numberIterations': max_iterations,
+    'best_SolutionPerIteration': best_SolutionPerIteration.tolist(),
   }

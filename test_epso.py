@@ -1,6 +1,6 @@
 import numpy as np
 
-def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, n_iterations):
+def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, population, n_iterations):
   # Problem Parameters
   n_items = problemLength  # Number of items
   max_weight = knapsackCapacity  # Knapsack capacity
@@ -8,7 +8,7 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
   weights = weight
 
   # EPSO Parameters
-  n_particles = particles
+  n_particles = population
   max_iterations = n_iterations
   w = 0.7  # Inertia weight
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
@@ -40,7 +40,7 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
         solution[idx] = 1
         total_weight += weights[idx]
     
-    print('greedy solution value', np.dot(value, solution))
+    # print('greedy solution value', np.dot(value, solution))
     return solution
   
   def initialize_particles(weights, values, capacity, n_particles, n_items):
@@ -107,21 +107,30 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
         pBest_scores[i] = fitness
 
     best_value = np.max(pBest_scores)
-    best_SolutionPerIteration = np.append(best_SolutionPerIteration, gBest_score)
+    best_SolutionPerIteration = np.append(best_SolutionPerIteration, best_value)
     
     # Update global best
     if best_value > gBest_score:
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
 
-  print(best_SolutionPerIteration)
+    if best_value == optimalKnapsackValue:
+      return {
+        'solValue': gBest_score.astype(np.int64).item(),
+        'solWeight': np.dot(gBest, weights).astype(np.int64).item(),
+        'solArray': gBest.astype(np.int64).tolist(),
+        'numberIterations': itr+1,
+        'best_SolutionPerIteration': best_SolutionPerIteration.astype(np.int64).tolist(),
+      }
 
   # Output best solution
   # print("Best value obtained:", gBest_score)
-  # print("Best selection of items:", gBest)  
+  # print("Best selection of items:", gBest)
   
   return {
-    'solValue': gBest_score,
-    'solArray': gBest,
+    'solValue': gBest_score.astype(np.int64).item(),
+    'solWeight': np.dot(gBest, weights).astype(np.int64).item(),
+    'solArray': gBest.astype(np.int64).tolist(),
     'numberIterations': max_iterations,
+    'best_SolutionPerIteration': best_SolutionPerIteration.astype(np.int64).tolist(),
   }
