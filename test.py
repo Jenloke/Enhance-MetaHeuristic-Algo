@@ -5,87 +5,146 @@ from numpy import random
 from datetime import datetime
 import tracemalloc
 
+import csv
+
 from pso import pso
 from epso import epso
 from hsa import hsa
 
 from test_hsa import test_hsa
+from test_pso import test_pso
+from test_epso import test_epso
 
-random.seed(12)
+# problem_seeds = [18, 12, 2]
+problem_seeds = [12, 49, 2]
 
-# set = [1, 2, 3]
-sets = [2]
+sets = [1, 2, 3]
+# sets = [1]
 
-# size = [100, 200, 500, 1000, 2000, 5000]
-# size = [100, 200, 500]
-sizes = [100]
+size = [100, 200, 500, 1000, 2000, 5000]
+# sizes = [100, 200]
 
 # n for pso/epso = particles
 # n for hsa = harmony memory size (HMS)
 n = 20
 iterations = 100
 
-for set in sets:
-  for size in sizes:
-    prob = problem(set, size)
-    
-    tracemalloc.start()
-    
-    start_time = datetime.now()
-    
-    algo = pso(**prob, particles=n, n_iterations=iterations)
-    # algo = hsa(**prob, harmonyMemorySize=n, n_iterations=iterations)
-    # algo = epso(**prob, particles=n, n_iterations=iterations)
-    
-    # algo = test_hsa(**prob, harmonyMemorySize=n, n_iterations=iterations)
+solutions = []
 
-    end_time = datetime.now()
-    print(end_time - start_time)
+algos = [test_hsa, test_pso, test_epso]
 
-    # Capture the memory usage
-    current, peak = tracemalloc.get_traced_memory()
-    # Stop the memory tracking
-    tracemalloc.stop()
-    print(f"Peak memory usage: {peak} bytes") # Bytes
-    print(f"Peak memory usage: {peak / 1024:.3f} kilobytes") # Kilobytes
-    print(f"Peak memory usage: {peak / 10**6:.3f} megabytes") # Megabytes
+for seed in problem_seeds:
+  random.seed(seed)
+  print('seed', seed)
+  for set in sets:
+    print('set', set)
+    for size in sizes:
+      prob = problem(set, size)
+      for algo in algos:
+        algorithm = algo.__name__
+        print(seed, algorithm, set, size, '\n')
+        
+        tracemalloc.start()
+        
+        start_time = datetime.now()
+        
+        algo = algo(**prob, population=n, n_iterations=iterations)
+        # algo = pso(**prob, particles=n, n_iterations=iterations)
+        # algo = hsa(**prob, harmonyMemorySize=n, n_iterations=iterations)
+        # algo = epso(**prob, particles=n, n_iterations=iterations)
+        # algo = test_hsa(**prob, harmonyMemorySize=n, n_iterations=iterations)
+        # algo = test_pso(**prob, particles=n, n_iterations=iterations)
+        # algo = test_epso(**prob, particles=n, n_iterations=iterations)
 
-    if algo['numberIterations'] == iterations:
-      print('Solved at MAX ITR', iterations)
-    else:
-      print('Solved before MAX specified ITR reached', algo['numberIterations'])
+        end_time = datetime.now()
+        runTime = (end_time - start_time).total_seconds()
+        # print(runTime, 'seconds')
 
-    # Final Value
-    print(algo['solValue'])
-    
-    # Sucess Rate
-    print('percentage:', algo['solValue']/prob['optimalKnapsackValue']*100)
-    
-    # Compare finalSol to optiSol
-    # compare each item to opti compare lang
-    optiSolution = optimalSolution(set, size)
-    decrepancy = []    
-    for idx in range(prob['problemLength']):
-      if (optiSolution[idx] == 1 and algo['solArray'][idx] == 0):
-        decrepancy.append({
-          'index': idx,
-          'value': prob['value'][idx].item(),
-          'weight': prob['weight'][idx].item(),
-          'case': 'O=1, S=0, should be in Solution', 
-        })
-        # print(eval, 'sol - should be one')
-      if (optiSolution[idx] == 0 and algo['solArray'][idx] == 1):
-        decrepancy.append({
-          'index': idx,
-          'value': prob['value'][idx].item(),
-          'weight': prob['weight'][idx].item(),
-          'case': 'O=0, S=1, should not be in Solution', 
-        })
-        # print(eval, 'sol - should be zero')
+        # Capture the memory usage
+        _, peak = tracemalloc.get_traced_memory()
+        # Stop the memory tracking
+        tracemalloc.stop()
+        memory_peak = peak / 1024
+        # print(f"Peak memory usage: {memory_peak} kilobytes") # Kilobytes
+        
+        # Sucess Rate
+        sucessRate = algo['solValue'] / prob['optimalKnapsackValue'] * 100
+        # print('percentage:', sucessRate)
+        
+        # Compare finalSol to optiSol
+        optiSolution = optimalSolution(set, size)
+        decrepancy = []    
+        for idx in range(prob['problemLength']):
+          if (optiSolution[idx] == 1 and algo['solArray'][idx] == 0):
+            decrepancy.append({
+              'index': idx,
+              'value': prob['value'][idx].item(),
+              'weight': prob['weight'][idx].item(),
+              'case': 'O=1, S=0, should be in Solution', 
+            })
+          if (optiSolution[idx] == 0 and algo['solArray'][idx] == 1):
+            decrepancy.append({
+              'index': idx,
+              'value': prob['value'][idx].item(),
+              'weight': prob['weight'][idx].item(),
+              'case': 'O=0, S=1, should not be in Solution', 
+            })
 
-    print(decrepancy)
+        final = {
+          #Problem
+          'seed': seed,
+          'set': set,
+          'size': size,
+          'algo': algorithm,
+          # Solution
+          'solArray': algo['solArray'],
+          'solValue': algo['solValue'],
+          'solWeight': algo['solWeight'],
+          # Objective #1
+          'best_SolutionPerIteration': algo['best_SolutionPerIteration'],
+          'runTime': runTime,
+          # Objective #2
+          'memoryPeak': memory_peak,
+          # Objective #3
+          'decrepancy': decrepancy, 
+          'sucessRate': sucessRate,
+        }
+        
+        solutions.append(final)
+
+
+headers = solutions[0].keys()
+# Write CSV using dictionary unpacking
+with open("output.csv", "w", newline="") as csvfile:
+  writer = csv.DictWriter(csvfile, fieldnames=headers)
+  writer.writeheader()
+  for row in solutions:
+    writer.writerow({**row})  # Using unpacking/spreading
+
+print('finished')
 
 """
+CSV
+  Problem Identifier
+  set - check
+  size - check
+  seed - check
+  
+  solarray - check 
+  solvalue - check
+  solweight - check
+  
+  obj 1 Convergence Speed
+  best_SolutionPerIteration: best_SolutionPerIteration - check
+  Time Complexity - eTime - check
+  
+  obj 2
+  Memory (KB) - Space Complexity - check
+  
+  obj 3 
+  decrepancy - check
+  sucess Rate (sol/opti) * 100 - check
+
 Convergence Speed 
   get best value per iteration - check
   get where solution flattens - evaluate - could be done in jupyter notebook - where solution stalls
