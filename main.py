@@ -1,12 +1,8 @@
 import numpy as np
-
 # size = [100,200,500,1000, 2000,5000,10000]
 # file = [1, 2, 3]
 
 def problem(file, size):
-  # file = 1
-  # size = 100
-
   # File 1
   # from binary file to a np array where each line has become a list
   knapsackProblem = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1", "r").readlines()
@@ -27,10 +23,6 @@ def problem(file, size):
 
   # Combining File 1 && 3
   value, weight = np_knapsackProblem.T
-  # combination = np.stack((value, weight, np_booleanArray), axis=1)
-
-  # print(np_booleanArray)
-  # print(np.dot(np_booleanArray, value))
 
   return {
     'problemLength': problemLength,
@@ -39,20 +31,7 @@ def problem(file, size):
     'knapsackCapacity': knapsackCapacity,
     'optimalKnapsackValue': optimalKnapsackValue
   }
-  
 
-  # Correct
-  # print(len(np_booleanArray))
-  # print(len(weight))
-  # print(len(value))
-  # print(np_booleanArray)
-  # print(weight)
-  # print(value)
-
-  # print(np_booleanArray[37])
-  # print(np_knapsackProblem[37])
-  # print(combination[37])
-  
 def optimalSolution(file, size):
   # File 2
   # Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
