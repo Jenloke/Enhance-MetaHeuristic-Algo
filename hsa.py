@@ -1,24 +1,23 @@
 import numpy as np
 
-def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, harmonyMemorySize, iterations):
-	np.random.seed(12)
+def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, harmonyMemorySize, n_iterations):
 	# Problem Parameters
 	num_items = problemLength
-	capacity = knapsackCapacity  # Knapsack capacity
+	max_weight = knapsackCapacity
 	values = value # Values of items
 	weights = weight # Weights of items
 
-	# Harmony Search Parameters
+	# HSA Parameters
 	HMS = harmonyMemorySize  # Harmony Memory Size
-	# iterations = 100
-	HMCR = 0.7 # Harmony Memory Consideration Rate
-	PAR = 0.3 # Pitch Adjustment Rate
+	max_iterations = n_iterations
+	HMCR = 0.8 # Harmony Memory Consideration Rate
+	PAR = 0.2 # Pitch Adjustment Rate
 	PAR_min = PAR
 	PAR_max = PAR + 0.6
 
 	def repair_solution(solution):
 		# Ensures solution is within the weight constraint.
-		while np.sum(weights * solution) > capacity:
+		while np.dot(solution, weights) > max_weight:
 			idx = np.where(solution == 1)[0]
 			if len(idx) == 0:
 				break
@@ -26,17 +25,17 @@ def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, ha
 			solution[worst_idx] = 0
 		return solution
 
-	# Generate Initial Harmony Memory (Random\ Feasible Solutions)
+	# Generate Initial Harmony Memory (Random Feasible Solutions)
 	def generate_solution():
 		solution = np.random.randint(0, 2, num_items)
 		repair_solution(solution)
 		return solution
 
 	harmony_memory = [generate_solution() for _ in range(HMS)]
-	harmony_values = [np.dot(sol, values) for sol in harmony_memory]
+	harmony_values = [np.dot(solution, values) for solution in harmony_memory]
 
 	# Harmony Search Optimization Loop
-	for itr in range(iterations):
+	for itr in range(max_iterations):
 		# Step 1: Improvise New Harmony
 		new_harmony = np.zeros(num_items, dtype=int)
 		for i in range(num_items):
@@ -45,7 +44,7 @@ def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, ha
 			else:  # Random selection
 				new_harmony[i] = np.random.randint(0, 2)
 
-			PAR = PAR_min + ((PAR_max - PAR_min) / iterations) * (itr/iterations)
+			PAR = PAR_min + ((PAR_max - PAR_min) / max_iterations) * (itr/max_iterations)
 			# Pitch Adjustment (Small Modification)
 			if np.random.rand() < PAR:
 				new_harmony[i] = 1 - new_harmony[i]  # Flip bit
@@ -71,23 +70,13 @@ def hsa(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, ha
 	return {
 		'solValue': best_value,
 		'solArray': best_solution,
-		'numberIterations': iterations,
+		'numberIterations': max_iterations,
 	}
 
-# if harmony_values[np.argmax(harmony_values)] == optimalKnapsackValue:
-# 	return {
-# 		'solValue': best_value,
-# 		'solArray': best_solution,
-# 		'numberIterations': iterations,
-# 		'numberIterations': itr+1,
-# 	}
-
-# Old Step2
-# while np.dot(new_harmony, weights) > capacity:
-# 	idx = np.random.choice(np.where(new_harmony == 1)[0])  # Pick a random 1
-# 	new_harmony[idx] = 0  # Remove the item
-
-# old_argmax = 0
-# if np.argmax(harmony_values) != old_argmax:
-# 	print(_, np.argmax(harmony_values))
-# old_argmax = np.argmax(harmony_values)
+		# if harmony_values[np.argmax(harmony_values)] == optimalKnapsackValue:
+		# 	best_index = np.argmax(harmony_values)
+		# 	return {
+		# 		'solValue': harmony_values[best_index],
+		# 		'solArray': harmony_memory[best_index],
+		# 		'numberIterations': itr+1,
+		# 	}
