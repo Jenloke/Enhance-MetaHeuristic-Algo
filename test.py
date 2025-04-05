@@ -21,7 +21,7 @@ problem_seeds = [12, 49, 2]
 sets = [1, 2, 3]
 # sets = [1]
 
-size = [100, 200, 500, 1000, 2000, 5000]
+sizes = [100, 200, 500, 1000, 2000, 5000]
 # sizes = [100, 200]
 
 # n for pso/epso = particles
@@ -42,7 +42,7 @@ for seed in problem_seeds:
       prob = problem(set, size)
       for algo in algos:
         algorithm = algo.__name__
-        print(seed, algorithm, set, size, '\n')
+        print(seed, algorithm, set, size)
         
         tracemalloc.start()
         
