@@ -1,23 +1,22 @@
 import numpy as np
 
-def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, iterations):
-  np.random.seed(12)
+def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, n_iterations):
   # Problem Parameters
   n_items = problemLength  # Number of items
   max_weight = knapsackCapacity  # Knapsack capacity
   values = value
   weights = weight
 
-  # PSO Parameters
+  # EPSO Parameters
   n_particles = particles
-  max_iterations = iterations
+  max_iterations = n_iterations
   w = 0.7  # Inertia weight
-  # c1, c2 = 1.5, 1.5  # Acceleration coefficients
-  c1, c2 = 0.5, 0.5
+  c1, c2 = 1.5, 1.5  # Acceleration coefficients
+  # c1, c2 = 0.5, 0.5
 
   def repair_solution(solution):
     # Ensures solution is within the weight constraint.
-    while np.sum(weights * solution) > max_weight:
+    while np.dot(solution, weights) > max_weight:
       idx = np.where(solution == 1)[0]
       if len(idx) == 0:
         break
@@ -42,7 +41,7 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
         solution[idx] = 1
         total_weight += weights[idx]
     
-    print('greedy solution value', np.sum(solution * value))
+    print('greedy solution value', np.dot(value, solution))
     return solution
   
   def initialize_particles(weights, values, capacity, n_particles, n_items):
@@ -73,12 +72,11 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
     return particles
   
   # Initialize particles
-  X = initialize_particles(weights, values, knapsackCapacity, n_particles, n_items)
-  # X = np.tile(greedy_solution(weight, value, knapsackCapacity), (n_particles, 1))  # Position matrix Enhanced
+  X = initialize_particles(weights, values, max_weight, n_particles, n_items)
   V = np.random.uniform(-1, 1, (n_particles, n_items)) # Velocity matrix
   
   pBest = X.copy()
-  pBest_scores = np.array([0 if np.sum(weights * x) > max_weight else np.sum(values * x) for x in X])
+  pBest_scores = np.array([0 if np.dot(x, weights) > max_weight else np.dot(x, values) for x in X])
   
   gBest = pBest[np.argmax(pBest_scores)].copy()
   gBest_score = np.max(pBest_scores)
@@ -88,8 +86,6 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
   def sigmoid(x):
     return 1 / (1 + np.exp(-x))
   
-
-
   # PSO Loop
   for itr in range(max_iterations):
     for i in range(n_particles):
@@ -102,7 +98,7 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
       X[i] = repair_solution(X[i])
       
       # Evaluate new solution
-      fitness = np.sum(values * X[i]) if np.sum(weights * X[i]) <= max_weight else 0
+      fitness = np.dot(X[i], values) if np.dot(X[i], weights) <= max_weight else 0
       
       # Update personal best
       if fitness > pBest_scores[i]:
@@ -114,13 +110,6 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
 
-    if gBest_score == optimalKnapsackValue:
-      return {
-        'solValue': gBest_score,
-        'solArray': gBest,
-        'numberIterations': itr+1,
-    }
-
   # Output best solution
   # print("Best value obtained:", gBest_score)
   # print("Best selection of items:", gBest)  
@@ -128,24 +117,5 @@ def epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, p
   return {
     'solValue': gBest_score,
     'solArray': gBest,
-    'numberIterations': iterations,
+    'numberIterations': max_iterations,
   }
-
-# FOR REFERENCE
-  # for i in range(len(X)):
-  #   print(i , np.dot(X[i], values))
-  #   print(i, np.dot(V[i], values))
-  #   # print(i , V[i])
-
-  # iteration = 0
-  # while(True):
-  # iteration += 1
-
-  # if iteration == 1000:
-  #   print('now at iteration:', iteration)
-  #   end_time = datetime.now()
-  #   print(end_time - start_time)
-  #   return {
-  #     'solValue': gBest_score,
-  #     'solArray': gBest,
-  #   }

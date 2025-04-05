@@ -1,16 +1,15 @@
 import numpy as np
 
-def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, iterations):
-  np.random.seed(12)
+def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, particles, n_iterations):
   # Problem Parameters
   n_items = problemLength  # Number of items
-  max_weight = knapsackCapacity  # Knapsack capacity
+  max_weight = knapsackCapacity
   values = value
   weights = weight
 
   # PSO Parameters
   n_particles = particles
-  max_iterations = iterations
+  max_iterations = n_iterations
   w = 0.7  # Inertia weight
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
@@ -19,7 +18,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   V = np.random.uniform(-1, 1, (n_particles, n_items)) # Velocity matrix
   
   pBest = X.copy()
-  pBest_scores = np.array([0 if np.sum(weights * x) > max_weight else np.sum(values * x) for x in X])
+  pBest_scores = np.array([0 if np.dot(x, weights) > max_weight else np.dot(x, values) for x in X])
   
   gBest = pBest[np.argmax(pBest_scores)].copy()
   gBest_score = np.max(pBest_scores)
@@ -31,7 +30,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   
   def repair_solution(solution):
     # Ensures solution is within the weight constraint.
-    while np.sum(weights * solution) > max_weight:
+    while np.dot(solution, weights) > max_weight:
       idx = np.where(solution == 1)[0]
       if len(idx) == 0:
         break
@@ -51,7 +50,7 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
       X[i] = repair_solution(X[i])
       
       # Evaluate new solution
-      fitness = np.sum(values * X[i]) if np.sum(weights * X[i]) <= max_weight else 0
+      fitness = np.dot(X[i], values) if np.dot(X[i], weights) <= max_weight else 0
       
       # Update personal best
       if fitness > pBest_scores[i]:
@@ -63,13 +62,6 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
       gBest = pBest[np.argmax(pBest_scores)].copy()
       gBest_score = np.max(pBest_scores)
 
-    if gBest_score == optimalKnapsackValue:
-      return {
-        'solValue': gBest_score,
-        'solArray': gBest,
-        'numberIterations': itr+1,
-    }
-
   # Output best solution
   # print("Best value obtained:", gBest_score)
   # print("Best selection of items:", gBest)  
@@ -77,27 +69,5 @@ def pso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, pa
   return {
     'solValue': gBest_score,
     'solArray': gBest,
-    'numberIterations': iterations,
+    'numberIterations': max_iterations,
   }
-
-
-# FOR REFERENCE
-  # for i in range(len(X)):
-  #   print(i , np.dot(X[i], values))
-  #   print(i, np.dot(V[i], values))
-  #   # print(i , V[i])
-
-  # iteration = 0
-  # while(True):
-  # iteration += 1
-
-
-
-  # if iteration == 1000:
-  #   print('now at iteration:', iteration)
-  #   end_time = datetime.now()
-  #   print(end_time - start_time)
-  #   return {
-  #     'solValue': gBest_score,
-  #     'solArray': gBest,
-  #   }
