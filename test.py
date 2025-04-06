@@ -15,14 +15,14 @@ from test_hsa import test_hsa
 from test_pso import test_pso
 from test_epso import test_epso
 
-# problem_seeds = [18, 12, 2]
-problem_seeds = [12, 49, 2]
+# problem_seeds = [12, 49, 2]
+problem_seeds = [293]
 
 sets = [1, 2, 3]
 # sets = [1]
 
 sizes = [100, 200, 500, 1000, 2000, 5000]
-# sizes = [100, 200]
+# sizes = [1000, 2000]
 
 # n for pso/epso = particles
 # n for hsa = harmony memory size (HMS)
@@ -32,6 +32,7 @@ iterations = 100
 solutions = []
 
 algos = [test_hsa, test_pso, test_epso]
+# algos = [test_epso]
 
 for seed in problem_seeds:
   random.seed(seed)
@@ -67,6 +68,8 @@ for seed in problem_seeds:
         memory_peak = peak / 1024
         # print(f"Peak memory usage: {memory_peak} kilobytes") # Kilobytes
         
+        # print('solvalue', algo['solValue'])
+        
         # Sucess Rate
         sucessRate = algo['solValue'] / prob['optimalKnapsackValue'] * 100
         # print('percentage:', sucessRate)
@@ -96,10 +99,14 @@ for seed in problem_seeds:
           'set': set,
           'size': size,
           'algo': algorithm,
+          'n': n,
+          'iterations': iterations,
           # Solution
+          'numberIterations': algo['numberIterations'],
           'solArray': algo['solArray'],
           'solValue': algo['solValue'],
           'solWeight': algo['solWeight'],
+          'greedy_solValue': algo['greedy_solValue'] if algorithm == 'test_epso' else -1,
           # Objective #1
           'best_SolutionPerIteration': algo['best_SolutionPerIteration'],
           'runTime': runTime,
@@ -109,9 +116,8 @@ for seed in problem_seeds:
           'decrepancy': decrepancy, 
           'sucessRate': sucessRate,
         }
-        
+        # print(final)
         solutions.append(final)
-
 
 headers = solutions[0].keys()
 # Write CSV using dictionary unpacking
@@ -120,7 +126,6 @@ with open("output.csv", "w", newline="") as csvfile:
   writer.writeheader()
   for row in solutions:
     writer.writerow({**row})  # Using unpacking/spreading
-
 print('finished')
 
 """
