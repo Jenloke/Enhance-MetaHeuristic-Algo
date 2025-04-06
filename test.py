@@ -127,35 +127,3 @@ with open("output.csv", "w", newline="") as csvfile:
   for row in solutions:
     writer.writerow({**row})  # Using unpacking/spreading
 print('finished')
-
-"""
-CSV
-  Problem Identifier
-  set - check
-  size - check
-  seed - check
-  
-  solarray - check 
-  solvalue - check
-  solweight - check
-  
-  obj 1 Convergence Speed
-  best_SolutionPerIteration: best_SolutionPerIteration - check
-  Time Complexity - eTime - check
-  
-  obj 2
-  Memory (KB) - Space Complexity - check
-  
-  obj 3 
-  decrepancy - check
-  sucess Rate (sol/opti) * 100 - check
-
-Convergence Speed 
-  get best value per iteration - check
-  get where solution flattens - evaluate - could be done in jupyter notebook - where solution stalls
-    get mean or avg solution to essentially determine if it still finds another solution
-Memory Complexity - Completed
-  using tracemalloc - check
-Sucess Rate 
-  algo / prob - check
-"""
