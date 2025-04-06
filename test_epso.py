@@ -40,7 +40,6 @@ def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackVal
         solution[idx] = 1
         total_weight += weights[idx]
     
-    # print('greedy solution value', np.dot(value, solution))
     return solution
   
   def initialize_particles(weights, values, capacity, n_particles, n_items):
@@ -49,7 +48,6 @@ def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackVal
     
     # Start with greedy solution
     greedy = greedy_solution(weights, values, capacity)
-    
     for i in range(n_particles):
       if i == 0:
         # Keep one pure greedy solution
@@ -57,16 +55,14 @@ def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackVal
       else:
         # Create perturbations of greedy solution
         particles[i] = greedy.copy()
-        
-        # Randomly flip some bits (with higher probability for 0s)
+          # Randomly flip some bits (with higher probability for 0s)
         for j in range(n_items):
-          if particles[i][j] == 1 and np.random.rand() < 0.2:
+          if particles[i][j] == 1 and np.random.rand() < 0.05:
             particles[i][j] = 0
-          elif particles[i][j] == 0 and np.random.rand() < 0.25:
+          elif particles[i][j] == 0 and np.random.rand() < 0.1:
             particles[i][j] = 1
-        
-        # Repair if needed
-        particles[i] = repair_solution(particles[i])
+      # Repair if needed
+      particles[i] = repair_solution(particles[i])
 
     return particles
   
@@ -121,6 +117,7 @@ def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackVal
         'solArray': gBest.astype(np.int64).tolist(),
         'numberIterations': itr+1,
         'best_SolutionPerIteration': best_SolutionPerIteration.astype(np.int64).tolist(),
+        'greedy_solValue': 0,
       }
 
   # Output best solution
@@ -133,4 +130,5 @@ def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackVal
     'solArray': gBest.astype(np.int64).tolist(),
     'numberIterations': max_iterations,
     'best_SolutionPerIteration': best_SolutionPerIteration.astype(np.int64).tolist(),
+    'greedy_solValue': 0,
   }
