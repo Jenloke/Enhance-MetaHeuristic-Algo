@@ -1,6 +1,6 @@
 import numpy as np
 
-def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, population, n_iterations):
+def test_ga_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackValue, population, n_iterations):
   # Problem Parameters
   n_items = problemLength  # Number of items
   max_weight = knapsackCapacity  # Knapsack capacity
@@ -49,18 +49,13 @@ def test_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsackVal
     # Start with greedy solution
     greedy = greedy_solution(weights, values, capacity)
     for i in range(n_particles):
-      if i == 0:
-        # Keep one pure greedy solution
-        particles[i] = greedy
-      else:
-        # Create perturbations of greedy solution
-        particles[i] = greedy.copy()
-          # Randomly flip some bits (with higher probability for 0s)
-        for j in range(n_items):
-          if particles[i][j] == 1 and np.random.rand() < 0.05:
-            particles[i][j] = 0
-          elif particles[i][j] == 0 and np.random.rand() < 0.1:
-            particles[i][j] = 1
+      particles[i] = greedy.copy()
+      # Randomly flip some bits (with higher probability for 0s)
+      for j in range(n_items):
+        if particles[i][j] == 1 and np.random.rand() < 0.05:
+          particles[i][j] = 0
+        elif particles[i][j] == 0 and np.random.rand() < 0.1:
+          particles[i][j] = 1
       # Repair if needed
       particles[i] = repair_solution(particles[i])
 
