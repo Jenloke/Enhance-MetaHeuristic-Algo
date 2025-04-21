@@ -3,8 +3,7 @@ import numpy as np
 # file = [1, 2, 3]
 
 def problem(file, size):
-  # File 1
-  # from binary file to a np array where each line has become a list
+  # File 1 from binary file to a np array where each line has become a list
   knapsackProblem = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1", "r").readlines()
   new_knapsackProblem = np.array([x.split() for x in knapsackProblem], dtype=int).astype(int)
 
@@ -21,7 +20,6 @@ def problem(file, size):
   optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
   # print('optimalKnapsackValue:', optimalKnapsackValue)
 
-  # Combining File 1 && 3
   value, weight = np_knapsackProblem.T
 
   return {
@@ -33,16 +31,8 @@ def problem(file, size):
   }
 
 def optimalSolution(file, size):  
-  # File 2
-  # Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
+  # File 2: Optimal Solution Array of 1 and 0 to NumPy Array of Boolean Values
   optimalSolution = open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1a", "r").read()
-  # np_booleanArray = np.array(optimalSolution.split(), dtype=int).astype(bool)
   np_booleanArray = np.array(optimalSolution.split(), dtype=int)
   # print(len(np_booleanArray))
-  
-  # print(np.dot(weight, np_booleanArray))
-
-  # optimalKnapsackValue: int = int(open(f"./Dataset/{file}/{size}/knapPI_{file}_{size}_1000_1o", "r").read())
-  # print('optimalKnapsackValue:', optimalKnapsackValue)
-  
   return np_booleanArray.tolist()

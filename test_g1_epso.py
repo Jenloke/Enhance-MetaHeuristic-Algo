@@ -14,7 +14,7 @@ def test_g1_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsack
   c1, c2 = 1.5, 1.5  # Acceleration coefficients
 
   def repair_solution(solution):
-    # Ensures solution is within the weight constraint.
+    # Ensures solution is within the weight constraint
     while np.dot(solution, weights) > max_weight:
       idx = np.where(solution == 1)[0]
       if len(idx) == 0:
@@ -43,7 +43,6 @@ def test_g1_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsack
     return solution
   
   def initialize_particles(weights, values, capacity, n_particles, n_items):
-    #Initialize particles using greedy solution with random perturbations
     particles = np.zeros((n_particles, n_items))
     
     # Start with greedy solution
@@ -55,7 +54,7 @@ def test_g1_epso(problemLength, value, weight, knapsackCapacity, optimalKnapsack
       else:
         # Create perturbations of greedy solution
         particles[i] = greedy.copy()
-          # Randomly flip some bits (with higher probability for 0s)
+          # Randomly flip some items 
         for j in range(n_items):
           if particles[i][j] == 1 and np.random.rand() < 0.05:
             particles[i][j] = 0
