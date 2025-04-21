@@ -134,4 +134,4 @@ with open("output.csv", "w", newline="") as csvfile:
   writer.writeheader()
   for row in solutions:
     writer.writerow({**row})  # Using unpacking/spreading
-print('finished')
+print('Algorithm Run Success')
