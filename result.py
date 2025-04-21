@@ -25,3 +25,23 @@ print('opti_weight', opti_weight)
 
 with open('out.json', 'w') as outfile:
   json.dump(decrepancy.tolist(), outfile)
+
+# FINAL DISCREPANCY
+# Compare finalSol to optiSol
+optiSolution = optimalSolution(set, size)
+decrepancy = []    
+for idx in range(prob['problemLength']):
+  if (optiSolution[idx] == 1 and algo['solArray'][idx] == 0):
+    decrepancy.append({
+      'index': idx,
+      'value': prob['value'][idx].item(),
+      'weight': prob['weight'][idx].item(),
+      'case': 'O=1, S=0, should be in Solution', 
+    })
+  if (optiSolution[idx] == 0 and algo['solArray'][idx] == 1):
+    decrepancy.append({
+      'index': idx,
+      'value': prob['value'][idx].item(),
+      'weight': prob['weight'][idx].item(),
+      'case': 'O=0, S=1, should not be in Solution', 
+    })
