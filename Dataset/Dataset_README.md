@@ -3,6 +3,7 @@
 ## Pasta Large Scale
 
 Possuí 3 categorias de arquivos:
+
 - KnapPI_1: fraca correlação entre peso e valor de cada item
 - KnapPI_2: média correlação entre o peso e valor de cada item
 - KnapPI_3: forte correlação entre o peso e o valor de cada item
@@ -16,3 +17,5 @@ Próximas `n`linhas: valor e peso de cada item
 ### Pasta Large Scale Optimum
 
 Contém o benefício máximo para cada arquivo da pasta Large Scale
+
+#### Gathered from Kaggle
