@@ -7,14 +7,16 @@ import tracemalloc
 
 import csv
 
-from pso import pso
-from epso import epso
-from hsa import hsa
+# Main Algos
+from algos.pso import pso
+from algos.epso import epso
+from algos.hsa import hsa
 
-from test_hsa import test_hsa
-from test_pso import test_pso
-from test_g1_epso import test_g1_epso
-from test_ga_epso import test_ga_epso
+# Testing Algos
+from test_algos.test_hsa import test_hsa
+from test_algos.test_pso import test_pso
+from test_algos.test_g1_epso import test_g1_epso
+from test_algos.test_ga_epso import test_ga_epso
 
 # problem_seeds = [12, 49, 2]
 problem_seeds = [293]
