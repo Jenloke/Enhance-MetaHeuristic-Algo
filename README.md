@@ -17,6 +17,10 @@ Metaheuristic algorithms (natured inspired algorithms) for the 0/1 Knapsack Prob
 
 The best algorithm out of the two is to be enhanced using **Greedy Initialization**, to address a major drawback of Metaheuristic Algorithm of being stuck in local optima — most optimal solution from a local search space — than global optima, the true optimal solution from the whole search scope, with this drawback better initialization from the enhancement would overcome this.
 
+### 📊 Visualization
+
+Using _Jupyter Notebook_, the visualization of convergence speed was demonstrated using line chart in 2 axes, the x-axis being number of iterations and the y-axis being the computed knapsack value of the algorithm. Comparing runs of two algorithms per line chart across different problem instances of the 0/1 knapsack problem.
+
 ### 🛠 Technologies Used
 
 - Python
@@ -25,7 +29,7 @@ The best algorithm out of the two is to be enhanced using **Greedy Initializatio
 - NumPy
 - Pandas
 
-#### 🏃 Running the REPO
+### 🏃 Running the REPO
 
 1. Clone the repository
 2. Install technologies used using pip
